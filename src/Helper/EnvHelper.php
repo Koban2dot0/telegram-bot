@@ -55,7 +55,8 @@ class EnvHelper
         foreach ($fileDataArray as $envVariable) {
             $separateByEqualSign = explode('=', $envVariable);
             if ($separateByEqualSign[0] === $key) {
-                return trim($separateByEqualSign[1]);
+                unset($separateByEqualSign[0]);
+                return trim(implode('=', $separateByEqualSign));
             }
         }
         throw new EnvException(sprintf(EnvException::ENV_VARIABLE_NOT_EXISTS, $key));
