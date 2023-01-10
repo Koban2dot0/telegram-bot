@@ -1,2 +1,2 @@
 <?php
-include 'src/Helper/EnvHelper.php';
+include 'vendor/autoload.php';

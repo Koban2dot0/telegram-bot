@@ -1,5 +1,7 @@
 <?php
 
+use Exception\EnvException;
+
 class EnvHelper
 {
 
@@ -22,7 +24,7 @@ class EnvHelper
     /**
      * @throws Exception
      */
-    public function selectEnvToUse(): void
+    private function selectEnvToUse(): void
     {
         $prodEnv = __DIR__ . DIRECTORY_SEPARATOR . '../../' . '.env';
         $envToUse = $this->getEnvVar(
@@ -34,7 +36,7 @@ class EnvHelper
         } elseif ($envToUse === self::DEV) {
             $this->env = __DIR__ . DIRECTORY_SEPARATOR . '../../' . '.env.local';
         } else {
-            throw new Exception('ENV variable was not set');
+            throw new EnvException(sprintf(EnvException::ENV_VARIABLE_NOT_EXISTS, 'ENV'));
         }
     }
 
@@ -43,8 +45,11 @@ class EnvHelper
      */
     public function getEnvVar(string $key, string $envPath = null): string
     {
+        if ($envPath === null) {
+            $envPath = $this->env;
+        }
         if (!str_contains($envPath, '.env')) {
-            throw new Exception('ENV file was not provided');
+            throw new EnvException(EnvException::ENV_FILE_NOT_EXISTS);
         }
         $fileDataArray = file($envPath);
         foreach ($fileDataArray as $envVariable) {
@@ -53,6 +58,6 @@ class EnvHelper
                 return trim($separateByEqualSign[1]);
             }
         }
-        return '';
+        throw new EnvException(sprintf(EnvException::ENV_VARIABLE_NOT_EXISTS, $key));
     }
 }
