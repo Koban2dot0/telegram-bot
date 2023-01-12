@@ -27,4 +27,6 @@ class MenuButtonWebApp extends MenuButton
             'web_app' => WebAppInfo::class,
         ];
     }
+
+
 }

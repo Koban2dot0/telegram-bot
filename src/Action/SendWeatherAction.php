@@ -2,18 +2,44 @@
 
 namespace Action;
 
+use Entity\Weather;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use Repository\ChatRepository;
+use Repository\UserRepository;
+use Service\OpenWeatherApiService;
+use Service\WeatherApiInterface;
+use Service\WeatherTextFormatterService;
 use TelegramHelper;
+
+include_once __DIR__ . '/../Repository/UserRepository.php';
+include_once __DIR__ . '/../Repository/ChatRepository.php';
+include_once __DIR__ . '/../Service/OpenWeatherApiService.php';
+include_once __DIR__ . '/../Service/WeatherTextFormatterService.php';
+include_once __DIR__ . '/../Entity/Weather.php';
 
 class SendWeatherAction
 {
 
+    private UserRepository $userRepository;
+    private ChatRepository $chatRepository;
+    private WeatherApiInterface $weatherApiService;
+
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+        $this->chatRepository = new ChatRepository();
+        $this->weatherApiService = new OpenWeatherApiService();
+    }
+
+
     /**
      * @throws TelegramException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function sendDailyWeather(): bool
     {
@@ -22,16 +48,21 @@ class SendWeatherAction
             (new TelegramHelper())->configureBaseTelegramMysqlConnection();
         }
 
-        $pdo = DB::getPdo();
+        $users = $this->userRepository->getUsersWithWeatherMailing();
+        $chats = $this->chatRepository->getUserChats($users);
 
-        /** TODO: retrieve chat_id from database */
 
+        $data = $this->weatherApiService->getWeatherByLatLon('46.42842529996223', '30.71384692214876');
+        $weather = new Weather($data);
 
-        /** TODO: add weather API and format message sending */
-        $result = Request::sendMessage([
-            'chat_id' => $chat_id,
-            'text'    => 'Your utf8 text 😜 ...',
-        ]);
+        foreach ($chats as $chat) {
+            Request::sendMessage([
+                'chat_id' => $chat['chat_id'],
+                'text'    => WeatherTextFormatterService::getText($weather),
+            ]);
+        }
+
+        return true;
 
         /** TODO: create user command and configure cron */
     }

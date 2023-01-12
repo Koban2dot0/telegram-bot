@@ -421,18 +421,16 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT INTO `' . TB_USER . '`
-                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `is_premium`, `added_to_attachment_menu`, `created_at`, `updated_at`)
+                (`id`, `is_bot`, `username`, `first_name`, `last_name`, `language_code`, `created_at`, `updated_at`)
                 VALUES
-                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :is_premium, :added_to_attachment_menu, :created_at, :updated_at)
+                (:id, :is_bot, :username, :first_name, :last_name, :language_code, :created_at, :updated_at)
                 ON DUPLICATE KEY UPDATE
-                    `is_bot`                   = VALUES(`is_bot`),
-                    `username`                 = VALUES(`username`),
-                    `first_name`               = VALUES(`first_name`),
-                    `last_name`                = VALUES(`last_name`),
-                    `language_code`            = VALUES(`language_code`),
-                    `is_premium`               = VALUES(`is_premium`),
-                    `added_to_attachment_menu` = VALUES(`added_to_attachment_menu`),
-                    `updated_at`               = VALUES(`updated_at`)
+                    `is_bot`         = VALUES(`is_bot`),
+                    `username`       = VALUES(`username`),
+                    `first_name`     = VALUES(`first_name`),
+                    `last_name`      = VALUES(`last_name`),
+                    `language_code`  = VALUES(`language_code`),
+                    `updated_at`     = VALUES(`updated_at`)
             ');
 
             $sth->bindValue(':id', $user->getId());
@@ -441,8 +439,6 @@ class DB
             $sth->bindValue(':first_name', $user->getFirstName());
             $sth->bindValue(':last_name', $user->getLastName());
             $sth->bindValue(':language_code', $user->getLanguageCode());
-            $sth->bindValue(':is_premium', $user->getIsPremium(), PDO::PARAM_INT);
-            $sth->bindValue(':added_to_attachment_menu', $user->getAddedToAttachmentMenu(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
@@ -493,16 +489,16 @@ class DB
         try {
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_CHAT . '`
-                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `is_forum`, `created_at` ,`updated_at`, `old_id`)
+                (`id`, `type`, `title`, `username`, `first_name`, `last_name`, `all_members_are_administrators`, `created_at` ,`updated_at`, `old_id`)
                 VALUES
-                (:id, :type, :title, :username, :first_name, :last_name, :is_forum, :created_at, :updated_at, :old_id)
+                (:id, :type, :title, :username, :first_name, :last_name, :all_members_are_administrators, :created_at, :updated_at, :old_id)
                 ON DUPLICATE KEY UPDATE
                     `type`                           = VALUES(`type`),
                     `title`                          = VALUES(`title`),
                     `username`                       = VALUES(`username`),
                     `first_name`                     = VALUES(`first_name`),
                     `last_name`                      = VALUES(`last_name`),
-                    `is_forum`                       = VALUES(`is_forum`),
+                    `all_members_are_administrators` = VALUES(`all_members_are_administrators`),
                     `updated_at`                     = VALUES(`updated_at`)
             ');
 
@@ -524,7 +520,7 @@ class DB
             $sth->bindValue(':username', $chat->getUsername());
             $sth->bindValue(':first_name', $chat->getFirstName());
             $sth->bindValue(':last_name', $chat->getLastName());
-            $sth->bindValue(':is_forum', $chat->getIsForum());
+            $sth->bindValue(':all_members_are_administrators', $chat->getAllMembersAreAdministrators(), PDO::PARAM_INT);
             $date = $date ?: self::getTimestamp();
             $sth->bindValue(':created_at', $date);
             $sth->bindValue(':updated_at', $date);
@@ -1133,26 +1129,24 @@ class DB
             $sth = self::$pdo->prepare('
                 INSERT IGNORE INTO `' . TB_MESSAGE . '`
                 (
-                    `id`, `user_id`, `chat_id`, `message_thread_id`, `sender_chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
-                    `forward_signature`, `forward_sender_name`, `forward_date`, `is_topic_message`,
+                    `id`, `user_id`, `chat_id`, `sender_chat_id`, `date`, `forward_from`, `forward_from_chat`, `forward_from_message_id`,
+                    `forward_signature`, `forward_sender_name`, `forward_date`,
                     `reply_to_chat`, `reply_to_message`, `via_bot`, `edit_date`, `media_group_id`, `author_signature`, `text`, `entities`, `caption_entities`,
                     `audio`, `document`, `animation`, `game`, `photo`, `sticker`, `video`, `voice`, `video_note`, `caption`, `contact`,
                     `location`, `venue`, `poll`, `dice`, `new_chat_members`, `left_chat_member`,
                     `new_chat_title`, `new_chat_photo`, `delete_chat_photo`, `group_chat_created`,
                     `supergroup_chat_created`, `channel_chat_created`, `message_auto_delete_timer_changed`, `migrate_to_chat_id`, `migrate_from_chat_id`,
                     `pinned_message`, `invoice`, `successful_payment`, `connected_website`, `passport_data`, `proximity_alert_triggered`,
-                    `forum_topic_created`, `forum_topic_closed`, `forum_topic_reopened`,
                     `video_chat_scheduled`, `video_chat_started`, `video_chat_ended`, `video_chat_participants_invited`, `web_app_data`, `reply_markup`
                 ) VALUES (
-                    :message_id, :user_id, :chat_id, :message_thread_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
-                    :forward_signature, :forward_sender_name, :forward_date, :is_topic_message,
+                    :message_id, :user_id, :chat_id, :sender_chat_id, :date, :forward_from, :forward_from_chat, :forward_from_message_id,
+                    :forward_signature, :forward_sender_name, :forward_date,
                     :reply_to_chat, :reply_to_message, :via_bot, :edit_date, :media_group_id, :author_signature, :text, :entities, :caption_entities,
                     :audio, :document, :animation, :game, :photo, :sticker, :video, :voice, :video_note, :caption, :contact,
                     :location, :venue, :poll, :dice, :new_chat_members, :left_chat_member,
                     :new_chat_title, :new_chat_photo, :delete_chat_photo, :group_chat_created,
                     :supergroup_chat_created, :channel_chat_created, :message_auto_delete_timer_changed, :migrate_to_chat_id, :migrate_from_chat_id,
                     :pinned_message, :invoice, :successful_payment, :connected_website, :passport_data, :proximity_alert_triggered,
-                    :forum_topic_created, :forum_topic_closed, :forum_topic_reopened,
                     :video_chat_scheduled, :video_chat_started, :video_chat_ended, :video_chat_participants_invited, :web_app_data, :reply_markup
                 )
             ');
@@ -1171,7 +1165,6 @@ class DB
             $sth->bindValue(':message_id', $message->getMessageId());
             $sth->bindValue(':chat_id', $chat_id);
             $sth->bindValue(':sender_chat_id', $sender_chat_id);
-            $sth->bindValue(':message_thread_id', $message->getMessageThreadId());
             $sth->bindValue(':user_id', $user_id);
             $sth->bindValue(':date', $date);
             $sth->bindValue(':forward_from', $forward_from);
@@ -1180,7 +1173,6 @@ class DB
             $sth->bindValue(':forward_signature', $message->getForwardSignature());
             $sth->bindValue(':forward_sender_name', $message->getForwardSenderName());
             $sth->bindValue(':forward_date', $forward_date);
-            $sth->bindValue(':is_topic_message', $message->getIsTopicMessage());
 
             $reply_to_chat_id = null;
             if ($reply_to_message_id !== null) {
@@ -1228,9 +1220,6 @@ class DB
             $sth->bindValue(':connected_website', $message->getConnectedWebsite());
             $sth->bindValue(':passport_data', $message->getPassportData());
             $sth->bindValue(':proximity_alert_triggered', $message->getProximityAlertTriggered());
-            $sth->bindValue(':forum_topic_created', $message->getForumTopicCreated());
-            $sth->bindValue(':forum_topic_closed', $message->getForumTopicClosed());
-            $sth->bindValue(':forum_topic_reopened', $message->getForumTopicReopened());
             $sth->bindValue(':video_chat_scheduled', $message->getVideoChatScheduled());
             $sth->bindValue(':video_chat_started', $message->getVideoChatStarted());
             $sth->bindValue(':video_chat_ended', $message->getVideoChatEnded());

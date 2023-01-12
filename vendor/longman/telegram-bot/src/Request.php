@@ -82,13 +82,6 @@ use Throwable;
  * @method static ServerResponse getChatMember(array $data)                   Use this method to get information about a member of a chat. Returns a ChatMember object on success.
  * @method static ServerResponse setChatStickerSet(array $data)               Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
  * @method static ServerResponse deleteChatStickerSet(array $data)            Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
- * @method static ServerResponse getForumTopicIconStickers(array $data)       Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects
- * @method static ServerResponse createForumTopic(array $data)                Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
- * @method static ServerResponse editForumTopic(array $data)                  Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
- * @method static ServerResponse closeForumTopic(array $data)                 Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
- * @method static ServerResponse reopenForumTopic(array $data)                Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
- * @method static ServerResponse deleteForumTopic(array $data)                Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
- * @method static ServerResponse unpinAllForumTopicMessages(array $data)      Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
  * @method static ServerResponse answerCallbackQuery(array $data)             Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
  * @method static ServerResponse answerInlineQuery(array $data)               Use this method to send answers to an inline query. On success, True is returned.
  * @method static ServerResponse setMyCommands(array $data)                   Use this method to change the list of the bot's commands. Returns True on success.
@@ -105,7 +98,6 @@ use Throwable;
  * @method static ServerResponse stopPoll(array $data)                        Use this method to stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.
  * @method static ServerResponse deleteMessage(array $data)                   Use this method to delete a message, including service messages, with certain limitations. Returns True on success.
  * @method static ServerResponse getStickerSet(array $data)                   Use this method to get a sticker set. On success, a StickerSet object is returned.
- * @method static ServerResponse getCustomEmojiStickers(array $data)          Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
  * @method static ServerResponse uploadStickerFile(array $data)               Use this method to upload a .png file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
  * @method static ServerResponse createNewStickerSet(array $data)             Use this method to create new sticker set owned by a user. The bot will be able to edit the created sticker set. Returns True on success.
  * @method static ServerResponse addStickerToSet(array $data)                 Use this method to add a new sticker to a set created by the bot. Returns True on success.
@@ -114,7 +106,6 @@ use Throwable;
  * @method static ServerResponse setStickerSetThumb(array $data)              Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success.
  * @method static ServerResponse answerWebAppQuery(array $data)               Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.
  * @method static ServerResponse sendInvoice(array $data)                     Use this method to send invoices. On success, the sent Message is returned.
- * @method static ServerResponse createInvoiceLink(array $data)               Use this method to create a link for an invoice. Returns the created invoice link as String on success.
  * @method static ServerResponse answerShippingQuery(array $data)             If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
  * @method static ServerResponse answerPreCheckoutQuery(array $data)          Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned.
  * @method static ServerResponse setPassportDataErrors(array $data)           Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success. Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
@@ -240,13 +231,6 @@ class Request
         'getChatMember',
         'setChatStickerSet',
         'deleteChatStickerSet',
-        'getForumTopicIconStickers',
-        'createForumTopic',
-        'editForumTopic',
-        'closeForumTopic',
-        'reopenForumTopic',
-        'deleteForumTopic',
-        'unpinAllForumTopicMessages',
         'answerCallbackQuery',
         'answerInlineQuery',
         'setMyCommands',
@@ -263,7 +247,6 @@ class Request
         'stopPoll',
         'deleteMessage',
         'getStickerSet',
-        'getCustomEmojiStickers',
         'uploadStickerFile',
         'createNewStickerSet',
         'addStickerToSet',
@@ -272,7 +255,6 @@ class Request
         'setStickerSetThumb',
         'answerWebAppQuery',
         'sendInvoice',
-        'createInvoiceLink',
         'answerShippingQuery',
         'answerPreCheckoutQuery',
         'setPassportDataErrors',
@@ -972,5 +954,20 @@ class Request
     public static function kickChatMember(array $data = []): ServerResponse
     {
         return static::banChatMember($data);
+    }
+
+    /**
+     * Use this method to get the number of members in a chat. Returns Int on success.
+     *
+     * @deprecated
+     * @see Request::getChatMemberCount()
+     *
+     * @param array $data
+     *
+     * @return ServerResponse
+     */
+    public static function getChatMembersCount(array $data = []): ServerResponse
+    {
+        return static::getChatMemberCount($data);
     }
 }

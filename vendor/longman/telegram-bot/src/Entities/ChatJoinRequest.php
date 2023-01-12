@@ -17,6 +17,7 @@ namespace Longman\TelegramBot\Entities;
  */
 class ChatJoinRequest extends Entity
 {
+
     protected function subEntities(): array
     {
         return [
@@ -25,4 +26,5 @@ class ChatJoinRequest extends Entity
             'invite_link' => ChatInviteLink::class,
         ];
     }
+
 }
