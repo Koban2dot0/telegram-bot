@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 /**
  * This file is part of the PHP Telegram Bot example-bot package.
  * https://github.com/php-telegram-bot/example-bot/
@@ -18,22 +21,12 @@
 // Load composer
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/src/Helper/EnvHelper.php';
-
+require_once __DIR__ . '/src/Helper/DatabaseHelper.php';
 
 try {
-    // object to get data from configuration file
-    $envHelper = new EnvHelper();
-    // Create Telegram API object
-    $telegram = new Longman\TelegramBot\Telegram(
-        $envHelper->getEnvVar('BOT_TOKEN'),
-        $envHelper->getEnvVar('BOT_USERNAME'),
-    );
-
-    $telegram->useGetUpdatesWithoutDatabase();
-
+    $telegram = (new TelegramHelper())->configureBaseTelegramMysqlConnection();
     // Handle telegram getUpdates request
     $server_response = $telegram->handleGetUpdates();
-    var_dump($server_response);
     if ($server_response->isOk()) {
         $update_count = count($server_response->getResult());
         echo date('Y-m-d H:i:s') . ' - Processed ' . $update_count . ' updates';

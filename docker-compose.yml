@@ -5,10 +5,13 @@ services:
     build:
       context: ./src/settings
       dockerfile: Dockerfile
+    environment:
+      PHP_IDE_CONFIG: serverName=telegram_bot
     depends_on:
       - db
     volumes:
       - ./:/var/www/html/
+      - /php/php.ini:/usr/local/etc/php/php.ini:ro
     ports:
       - 8000:80
   db:

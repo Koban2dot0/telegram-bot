@@ -1,6 +1,8 @@
 {
     "require": {
-        "longman/telegram-bot": "^0.80.0",
-      "ext-mysqli": "*"
+      "ext-mysqli": "*",
+      "ext-pdo": "*",
+      "ext-pdo_mysql": "*",
+      "longman/telegram-bot": "0.77.0"
     }
 }
