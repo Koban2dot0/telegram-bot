@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 namespace Action;
@@ -10,14 +11,14 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Repository\ChatRepository;
 use Repository\UserRepository;
-use Service\OpenWeatherApiService;
-use Service\WeatherApiInterface;
+use Service\Weather\OpenWeatherApiService;
+use Service\Weather\WeatherApiInterface;
 use Service\WeatherTextFormatterService;
 use TelegramHelper;
 
 include_once __DIR__ . '/../Repository/UserRepository.php';
 include_once __DIR__ . '/../Repository/ChatRepository.php';
-include_once __DIR__ . '/../Service/OpenWeatherApiService.php';
+include_once __DIR__ . '/../Service/Weather/OpenWeatherApiService.php';
 include_once __DIR__ . '/../Service/WeatherTextFormatterService.php';
 include_once __DIR__ . '/../Entity/Weather.php';
 
@@ -48,7 +49,7 @@ class SendWeatherAction
             (new TelegramHelper())->configureBaseTelegramMysqlConnection();
         }
 
-        $users = $this->userRepository->getUsersWithWeatherMailing();
+        $users = $this->userRepository->getUsersSubscribedToWeatherMailing();
         $chats = $this->chatRepository->getUserChats($users);
 
 

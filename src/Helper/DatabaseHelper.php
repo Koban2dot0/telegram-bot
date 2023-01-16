@@ -1,9 +1,11 @@
 <?php
 
-include 'src/Helper/DatabaseHelperInterface.php';
+include 'DatabaseHelperInterface.php';
 
 class DatabaseHelper implements DatabaseHelperInterface
 {
+
+    public const WEATHER_ADDITIONAL_PARAMETER = 'weather';
 
     /**
      * @return string[]
@@ -18,6 +20,16 @@ class DatabaseHelper implements DatabaseHelperInterface
             'user' => $envHelper->getEnvVar('MYSQL_USER'),
             'password' => $envHelper->getEnvVar('MYSQL_PASSWORD'),
             'database' => $envHelper->getEnvVar('MYSQL_DATABASE'),
+        ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getUserAdditionalConfigParameters(): array
+    {
+        return [
+            self::WEATHER_ADDITIONAL_PARAMETER
         ];
     }
 }

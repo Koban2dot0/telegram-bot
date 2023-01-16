@@ -1,13 +1,13 @@
 <?php
 
-namespace Service;
+namespace Service\Weather;
 
 use EnvHelper;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
-include_once __DIR__ . '/../Helper/EnvHelper.php';
+include_once __DIR__ . '/../../Helper/EnvHelper.php';
 include_once __DIR__ . '/WeatherApiInterface.php';
 
 class OpenWeatherApiService implements WeatherApiInterface
